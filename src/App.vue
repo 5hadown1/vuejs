@@ -5,9 +5,11 @@
 		</header>
 		<main>
 			<Button @clicked="clicked"/>
-			<AddPayment @addNewPayment="addData" v-show="visible"/>
+			<AddPayment @addNewPayment="addData" v-show="visible" />
+			<SelectCategories :categories="categories" />
 			<br />
 			<PaymentsDisplay :list="paymentsList" />
+			<Pagination />
 		</main>
 	</div>
 </template>
@@ -16,47 +18,50 @@
 	import PaymentsDisplay from "./components/PaymentsDisplay.vue";
 	import AddPayment from "./components/AddPayment.vue";
 	import Button from "./components/Button.vue";
+	import SelectCategories from "./components/SelectCategories.vue";
+	import { mapGetters, mapMutations, mapActions } from 'vuex';
+import Pagination from './components/Pagination.vue';
 
 	export default {
 		name: "App",
 		components: {
 			PaymentsDisplay,
 			AddPayment,
-			Button
+			Button,
+			SelectCategories,
+			Pagination
 		},
 		data: () => ({
-			paymentsList: [],
 			visible: false
 		}),
 		methods: {
+			...mapMutations([
+				'setPaymentsListData',
+				'addDataToPaymentsList'
+			]),
+			...mapActions([
+				'fetchData',
+				'fetchCategories'
+			]),
 			addData(data) {
-				this.paymentsList = [...this.paymentsList, data]
+				this.addDataToPaymentsList(data);
 			},
 			clicked() {
 				this.visible = !this.visible;
-			},
-			fetchData() {
-				return [{
-						date: "28.03.2020",
-						category: "Food",
-						value: 169
-					},
-					{
-						date: "20.04.2021",
-						category: "Sport",
-						value: 400
-					},
-					{
-						date: "28.05.2020",
-						category: "Internet",
-						value: 200
-					}
-				];
 			}
 		},
+		computed: {
+			...mapGetters({
+				paymentsList : 'getPaymentsList',
+				categories: 'getCategoryList'
+			}),
+		},
 		created() {
-			this.paymentsList = this.fetchData()
-		}
+			this.fetchData();
+			if (!this.categories.length) {
+				this.fetchCategories();
+			}
+		},
 	};
 </script>
 
@@ -69,6 +74,4 @@
 		color: #2c3e50;
 		margin-top: 60px;
 	}
-
-	.wrapper {}
 </style>
