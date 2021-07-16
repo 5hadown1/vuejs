@@ -3,6 +3,9 @@
 		<div v-for="(item, idx) in list" :key="idx">
 			{{idx + 1}}-{{ item }}
 		</div>
+		<div>
+			Total: {{ getFPV }}
+		</div>
 	</div>
 </template>
 
@@ -17,6 +20,11 @@
 		},
 		data() {
 			return {}
+		},
+		computed: {
+			getFPV () {
+				return this.$store.getters.getFullPaymentValue;
+			}
 		}
 	}
 </script>
