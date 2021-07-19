@@ -8,8 +8,11 @@
 			<AddPayment @addNewPayment="addData" v-show="visible" />
 			<SelectCategories :categories="categories" />
 			<br />
-			<PaymentsDisplay :list="paymentsList" />
-			<Pagination />
+			<PaymentsDisplay :list="currentElements" />
+			<Pagination :cur="curPage"
+						:n="n"
+						:length="paymentsList.length"
+						@paginate="onChangePage"/>
 		</main>
 	</div>
 </template>
@@ -32,7 +35,10 @@ import Pagination from './components/Pagination.vue';
 			Pagination
 		},
 		data: () => ({
-			visible: false
+			visible: false,
+			page: '',
+			curPage: 1,
+			n: 20,
 		}),
 		methods: {
 			...mapMutations([
@@ -48,6 +54,9 @@ import Pagination from './components/Pagination.vue';
 			},
 			clicked() {
 				this.visible = !this.visible;
+			},
+			onChangePage(p) {
+				this.curPage = p;
 			}
 		},
 		computed: {
@@ -55,6 +64,10 @@ import Pagination from './components/Pagination.vue';
 				paymentsList : 'getPaymentsList',
 				categories: 'getCategoryList'
 			}),
+			currentElements(){
+				const { n, curPage } = this;
+				return this.paymentsList.slice(n * (curPage - 1), n * (curPage - 1) + n);
+			},
 		},
 		created() {
 			this.fetchData();
@@ -62,6 +75,10 @@ import Pagination from './components/Pagination.vue';
 				this.fetchCategories();
 			}
 		},
+		mounted() {
+			const page = this.$route.params.page || 1;
+			this.curPage = Number(page);
+		}
 	};
 </script>
 

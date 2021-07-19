@@ -34,24 +34,18 @@ export default new Vuex.Store({
 		fetchData({ commit }) {
 			return new Promise((resolve) => {
 					// имитируем работу с сетью, ставим задержку получения данных в 2 секунды
-					setTimeout(() => {
-						resolve([{
-								date: '28.03.2020',
-								category: 'Food',
-								value: 169,
-							},
-							{
-								date: '24.03.2020',
-								category: 'Transport',
-								value: 360,
-							},
-							{
-								date: '24.03.2020',
-								category: 'Food',
-								value: 532,
-							},
-						])
-					}, 2000)
+					setTimeout(()=>{
+						const items = []
+						for(let i= 1; i< 50; i++){
+							items.push({
+								date: "23.12.2020",
+								category: "Sport",
+								value: i,
+								id: i
+							})
+						}
+						resolve(items)
+					},1000)
 				})
 				.then(res => {
 					// запускаем изменение состояния через commit
