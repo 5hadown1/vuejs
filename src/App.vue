@@ -2,10 +2,13 @@
 	<div id="app" :class="[$style.wrapper]">
 		<header>
 			<h1>My personal cost</h1>
+			<router-link to="/dashboard">Dashboard</router-link> / 
+			<router-link to="/about">About</router-link>
 		</header>
 		<main>
-			<Button @clicked="clicked"/>
-			<AddPayment @addNewPayment="addData" v-show="visible" />
+			<router-view />
+			<Button @clicked="clicked" />
+			<AddPayment @addNewPayment="addData" v-if="visible" />
 			<SelectCategories :categories="categories" />
 			<br />
 			<PaymentsDisplay :list="currentElements" />
@@ -23,7 +26,7 @@
 	import Button from "./components/Button.vue";
 	import SelectCategories from "./components/SelectCategories.vue";
 	import { mapGetters, mapMutations, mapActions } from 'vuex';
-import Pagination from './components/Pagination.vue';
+	import Pagination from './components/Pagination.vue';
 
 	export default {
 		name: "App",
@@ -57,6 +60,9 @@ import Pagination from './components/Pagination.vue';
 			},
 			onChangePage(p) {
 				this.curPage = p;
+			},
+			setPage () {
+				this.page = location.pathname.slice(1);
 			}
 		},
 		computed: {
@@ -78,6 +84,16 @@ import Pagination from './components/Pagination.vue';
 		mounted() {
 			const page = this.$route.params.page || 1;
 			this.curPage = Number(page);
+			this.setPage();
+			const links = document.querySelectorAll('a')
+			links.forEach(link => {
+				link.addEventListener('click', event => {
+					event.preventDefault();
+					history.pushState({}, '', link.href);
+					this.setPage();
+				})
+			})
+			window.addEventListener('popstate', this.setPage)
 		}
 	};
 </script>

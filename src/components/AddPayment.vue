@@ -13,14 +13,15 @@
 		data() {
 			return {
 				date: "",
-				category: "",
-				value: null
+				category: this.$route.params.category,
+				value: +this.$route.query.value
 			}
 		},
 		methods: {
 			onClick() {
 				const { category, value } = this
 				const data = {
+					id: new Date().getTime(),
 					date: this.date || this.getCurrentDate,
 					category,
 					value
@@ -37,10 +38,11 @@
 				const y = today.getFullYear()
 				return `${d}.${m}.${y}`
 			}
+		},
+		mounted() {
+			if(!this.$route.query.value) {
+				console.log('Value epmty')
+			}
 		}
 	}
 </script>
-
-<style lang="scss" scoped>
-
-</style>
