@@ -13,11 +13,16 @@
 		data() {
 			return {
 				date: "",
-				category: this.$route.params.category,
-				value: +this.$route.query.value
+				category: '',
+				value: null
 			}
 		},
 		methods: {
+			goToPageDashboard(){
+				this.$router.push({
+					name: 'Dashboard'
+				})
+			},
 			onClick() {
 				const { category, value } = this
 				const data = {
@@ -26,7 +31,13 @@
 					category,
 					value
 				}
-				//Вызов события, название события и аргументы
+
+				if(this.getValueQueryFromRoute && this.getCategoryParamsFromRoute) {
+					this.$store.commit('addDataToPaymentsList', data);
+					this.goToPageDashboard();
+					return
+				}
+
 				this.$emit('addNewPayment', data)
 			}
 		},
@@ -37,12 +48,20 @@
 				const m = today.getMonth() + 1
 				const y = today.getFullYear()
 				return `${d}.${m}.${y}`
+			},
+			getValueQueryFromRoute() {
+				return Number(this.$route.query?.value) ?? null;
+			},
+			getCategoryParamsFromRoute() {
+				return this.$route.params?.category ?? null;
 			}
 		},
-		mounted() {
-			if(!this.$route.query.value) {
-				console.log('Value epmty')
+		created(){
+			if((!this.getValueQueryFromRoute || !this.getCategoryParamsFromRoute) && this.$route.name !== 'Dashboard'){
+				this.goToPageDashboard()
 			}
+			this.category = this.getCategoryParamsFromRoute;
+			this.value = this.getValueQueryFromRoute;
 		}
 	}
 </script>

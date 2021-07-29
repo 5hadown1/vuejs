@@ -21,15 +21,12 @@ export default new Router({
 			component: About
 		}, {
 			path: '/add/payment/:category',
-			name: AddPayment,
-			component: { template: '<div></div>' }
+			name: 'AddPaymentRouting',
+			component: AddPayment
 		}, {
 			path: '/404',
 			name: 'NotFound',
 			component: Page404
-		}, {
-			path: '*',
-			redirect: '/404'
 		}
 	]
 })
