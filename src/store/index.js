@@ -10,7 +10,7 @@ export default new Vuex.Store({
 	},
     mutations: {
 		setPaymentsListData (state, payload) {
-			state.paymentsList = payload;
+			state.paymentsList = [...state.paymentsList, ...payload];
 		},
 		addDataToPaymentsList (state, payload) {
 			state.paymentsList.push(payload);
@@ -26,7 +26,7 @@ export default new Vuex.Store({
 		getPaymentsList: state => state.paymentsList,
 		getFullPaymentValue: state => {
 			return state.paymentsList
-				.reduce((res, cur) => res + cur.value, 0)
+				.reduce((res, cur) => + res + cur.value, 0)
 		},
 		getCategoryList: state => state.categoryList,
 	},
@@ -38,10 +38,10 @@ export default new Vuex.Store({
 						const items = []
 						for(let i= 1; i< 50; i++){
 							items.push({
+								id: i,
 								date: "23.12.2020",
 								category: "Sport",
-								value: i,
-								id: i
+								value: i
 							})
 						}
 						resolve(items)

@@ -15,7 +15,7 @@
 			onClick() {
 				this.$emit('clicked');
 			}
-		},
+		}
 	}
 </script>
 
